@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="weatherApp" ng-controller="weatherCtrl">
+<head>
+    <title>Weather App</title>
+    <link href="stylesheets/bootstrap.css" rel="stylesheet" />
+    <script src="scripts/angular/angular.js"></script>
+    <script src="scripts/angular/angular-resource.js"></script>
+    <script src="scripts/angular/ngStorage.js"></script>
+    <script src="scripts/angular/angular-messages.js"></script>
+    <script src="scripts/weather.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+
+<body class="container-fluid">
+    <form name="inputForm" novalidate>
+        <div class="form-group row" ng-class="{'has-error': inputForm.place.$touched && inputForm.place.$invalid}">
+            <input placeholder="Search a place" class="input-lg col-sm-offset-3 col-sm-6 col-xs-12" type="search"
+                   ng-model="place" name="place" ng-change="getLocation()" required minlength="3" pattern="[A-Za-z\ ]+" />
+            <div class="help-block" ng-messages="inputForm.place.$error" ng-show="inputForm.place.$touched">
+                <p ng-message="required">The place field is required</p>
+                <p ng-message="minlength">Please enter at least 3 letters</p>
+                <p ng-message="pattern">Please enter letters</p>
+            </div>
+        </div>
+
+        <table ng-show="place.length>=3" ng-hide="locationSelected" class="col-sm-offset-3 col-sm-6">
+            <tr ng-repeat="location in locations.RESULTS | filter: place">
+                <td><a ng-click="getWeather(location)">{{location.name}}</a></td>
+            </tr>
+        </table>
+
+        <div ng-show="locationSelected" class="col-sm-offset-3">
+            <!--Below is the radio buttons group. It stores user's choice of temperature units in $localStorage.
+            When user changes preference, extrema() would be called to update the statistics.-->
+            <div class="radio-inline">
+                <label>
+                    <input type="radio" value="celsius" ng-model="storage.temperature" ng-change="extrema()" />Celsius
+                </label>
+            </div>
+            <div class="radio-inline">
+                <label>
+                    <input type="radio" value="fahrenheit" ng-model="storage.temperature" ng-change="extrema()" />Fahrenheit
+                </label>
+            </div>
+        </div>
+        <div class="text-warning h4">{{status}}</div>
+    </form>
+
+    <!--All the weather information only shows after the location is selected.-->
+    <div ng-show="locationSelected">
+        <!--Below is the current weather. ng-show is used to show the temperature units symbols.-->
+        <section class="row">
+            <div class="col-xs-2 text-primary"><strong>Current</strong></div>
+            <div class="col-xs-10 pull-right">{{weather.current_observation.observation_time}}</div>
+            <div class="col-xs-1">{{weather.forecast.simpleforecast.forecastday[0].date.day}}/{{weather.forecast.simpleforecast.forecastday[0].date.month}}</div>
+            <div class="col-xs-1">{{weather.forecast.simpleforecast.forecastday[0].date.weekday_short}}</div>
+            <div class="col-xs-3 text-center text-info">
+                Temp.<span ng-show="storage.temperature=='celsius'">(°C)</span>
+                <span ng-show="storage.temperature=='fahrenheit'">(°F)</span>
+            </div>
+            <div class="col-xs-2 text-info">Condition</div>
+            <div class="col-xs-1 text-info">Humidity</div>
+            <div class="col-xs-4 text-center text-info">Wind</div>
+
+            <div class="col-xs-offset-2 col-xs-1">High</div>
+            <div class="col-xs-1">Low</div>
+            <div class="col-xs-1">Feels</div>
+            <div class="col-xs-offset-3 col-xs-2">Speed</div>
+            <div class="col-xs-2">Direction</div>
+
+            <div ng-show="storage.temperature=='celsius'">
+                <div class="col-xs-offset-2 col-xs-1">{{weather.forecast.simpleforecast.forecastday[0].high.celsius}}</div>
+                <div class="col-xs-1">{{weather.forecast.simpleforecast.forecastday[0].low.celsius}}</div>
+                <div class="col-xs-1">{{weather.current_observation.feelslike_c}}</div>
+            </div>
+            <div ng-show="storage.temperature=='fahrenheit'">
+                <div class="col-xs-offset-2 col-xs-1">{{weather.forecast.simpleforecast.forecastday[0].high.fahrenheit}}</div>
+                <div class="col-xs-1">{{weather.forecast.simpleforecast.forecastday[0].low.fahrenheit}}</div>
+                <div class="col-xs-1">{{weather.current_observation.feelslike_f}}</div>
+            </div>
+            <div class="col-xs-2"><img src="http://icons.wxug.com/i/c/a/{{weather.forecast.simpleforecast.forecastday[0].icon}}.gif"></div>
+            <div class="col-xs-1">{{weather.forecast.simpleforecast.forecastday[0].avehumidity}}</div>
+            <div class="col-xs-2">{{weather.forecast.simpleforecast.forecastday[0].avewind.kph}} kph</div>
+            <div class="col-xs-1">{{weather.forecast.simpleforecast.forecastday[0].avewind.dir}}</div>
+            <hr />
+        </section>
+
+        <!--Below is the forecasts for extra small.-->
+        <section class="row">
+            <div class="col-xs-2 text-primary"><strong>Forecasts</strong></div><br />
+            <div class="visible-xs" ng-repeat="forecastday in weather.forecast.simpleforecast.forecastday | limitTo: 5">
+                <div class="col-xs-2 text-success">
+                    {{forecastday.date.day}}/{{forecastday.date.month}}
+                </div>
+                <div class="col-xs-2">
+                    {{forecastday.date.weekday_short}}
+                </div>
+                <div class="col-xs-2">
+                    <span ng-show="storage.temperature=='celsius'">{{forecastday.high.celsius}}°C</span>
+                    <span ng-show="storage.temperature=='fahrenheit'">{{forecastday.high.fahrenheit}}°F</span>
+                </div>
+                <div class="col-xs-2">
+                    <span ng-show="storage.temperature=='celsius'">{{forecastday.low.celsius}}°C</span>
+                    <span ng-show="storage.temperature=='fahrenheit'">{{forecastday.low.fahrenheit}}°F</span>
+                </div>
+                <div class="col-xs-4">
+                    <img src="http://icons.wxug.com/i/c/a/{{forecastday.icon}}.gif">
+                </div>
+            </div>
+
+            <!--Below is the forecasts for small. The only reason I seperated the extra small and small is because I can style the extra small in this way.-->
+            <div class="hidden-xs">
+                <div class="col-sm-2 text-info">
+                    Date<br />Weekday<br />High Temp.<br />Low temp.<br />Precip.<br />Wind<br />Humidity<br />Condition<br />
+                </div>
+                <div class="col-sm-2" ng-repeat="forecastday in weather.forecast.simpleforecast.forecastday.slice(0,5)">
+                    {{forecastday.date.day}}/{{forecastday.date.month}}<br />
+                    {{forecastday.date.weekday}}<br />
+                    <span ng-show="storage.temperature=='celsius'">{{forecastday.high.celsius}}°C</span>
+                    <span ng-show="storage.temperature=='fahrenheit'">{{forecastday.high.fahrenheit}}°F</span><br />
+                    <span ng-show="storage.temperature=='celsius'">{{forecastday.low.celsius}}°C</span>
+                    <span ng-show="storage.temperature=='fahrenheit'">{{forecastday.low.fahrenheit}}°F</span><br />
+                    {{forecastday.pop}}%<br />
+                    {{forecastday.avewind.kph}} kph
+                    {{forecastday.avewind.dir}}<br />
+                    {{forecastday.avehumidity}}<br />
+                    <img src="http://icons.wxug.com/i/c/a/{{forecastday.icon}}.gif">
+                </div>
+            </div>
+        </section>
+
+        <!--Below is the forecast for middle and large screens, which is almost identical to the code for small screen. I only changed the numbers in ng-repeat-->
+        <section class="row visible-md visible-lg">
+            <hr />
+            <div class="col-sm-2 text-info">
+                Date<br />Weekday<br />High Temp.<br />Low temp.<br />Precip.<br />Wind<br />
+                Humidity<br />Condition<br />
+            </div>
+            <div class="col-sm-2" ng-repeat="forecastday in weather.forecast.simpleforecast.forecastday.slice(5,10)">
+                {{forecastday.date.day}}/{{forecastday.date.month}}<br />
+                {{forecastday.date.weekday}}<br />
+                <span ng-show="storage.temperature=='celsius'">{{forecastday.high.celsius}}°C</span>
+                <span ng-show="storage.temperature=='fahrenheit'">{{forecastday.high.fahrenheit}}°F</span><br />
+                <span ng-show="storage.temperature=='celsius'">{{forecastday.low.celsius}}°C</span>
+                <span ng-show="storage.temperature=='fahrenheit'">{{forecastday.low.fahrenheit}}°F</span><br />
+                {{forecastday.pop}}%<br />
+                {{forecastday.avewind.kph}} kph
+                {{forecastday.avewind.dir}}<br />
+                {{forecastday.avehumidity}}<br />
+                <img src="http://icons.wxug.com/i/c/a/{{forecastday.icon}}.gif">
+            </div>
+        </section><hr />
+
+        <!--Below is the statistics and refresh button-->
+        <footer class="row">
+            <h5 class="text-primary">5 Day Statistics</h5>
+            <div class="col-sm-3">Highest temperature: {{max}}</div>
+            <div class="col-sm-3">Lowest temperature: {{min}}</div>
+            <div class="col-sm-3">The number of fine days: {{fine}}</div>
+            <button class="col-sm-1 btn btn-primary" ng-click="fresh()" ng-show="locationSelected">Fresh</button>
+            <a class="col-sm-2" href="http://www.wunderground.com/"><img src="http://icons.wxug.com/graphics/wu2/logo_130x80.png"></a>
+        </footer>
+    </div>
+</body>
+</html>
