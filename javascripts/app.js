@@ -6,10 +6,10 @@ weatherApp.config(['$routeProvider',
   function ($routeProvider) {
       $routeProvider.
         when('/about', {
-            templateUrl: 'Views/about.html'
+            templateUrl: 'views/about.html'
         }).
         when('/weather', {
-            templateUrl: 'Views/weather.html',
+            templateUrl: 'views/weather.html',
             controller: 'weatherCtrl'
         }).
         otherwise({
