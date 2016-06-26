@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" ng-app="weatherApp">
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="portfolioApp">
 <head>
     <title>Test Website</title>
     <link href="stylesheets/bootstrap.css" rel="stylesheet" />
-    <link href="stylesheets/icon.css" rel="stylesheet" />
+    <link href="stylesheets/mystyle.css" rel="stylesheet" />
     <script src="javascripts/angular/angular.js"></script>
     <script src="javascripts/angular/angular-route.js"></script>
     <script src="javascripts/angular/angular-resource.js"></script>
     <script src="javascripts/angular/ngStorage.js"></script>
     <script src="javascripts/angular/angular-messages.js"></script>
     <script src="javascripts/app.js"></script>
-    <script src="javascripts/weather.js"></script>
+    <script src="javascripts/controller/weather.js"></script>
+    <script src="javascripts/controller/CRUD.js"></script>
     <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
@@ -25,8 +26,8 @@
             </div>
             <div class="navbar-collapse" ng-class="{collapse: navbarCollapsed}" ng-click="navbarCollapsed=true">
                 <ul class="nav navbar-nav">
-                    <li><a href="#/about">About</a></li>
                     <li><a href="#/weather"><i class="glyphicon glyphicon-cloud"></i>Weather</a></li>
+                    <li><a href="#/CRUD"><i class="glyphicon glyphicon-blackboard"></i>CRUD</a></li>
                 </ul>
             </div>
         </div>
