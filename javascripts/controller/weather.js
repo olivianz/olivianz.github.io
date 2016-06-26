@@ -1,5 +1,5 @@
-var myApp = angular.module('weatherApp');
-myApp.controller('weatherCtrl', myFunction);
+var weatherApp = angular.module('portfolioApp');
+weatherApp.controller('weatherCtrl', myFunction);
 function myFunction($scope, $location, $routeParams, $resource, $localStorage) {
     var locationInfo = $resource("http://sitwww.lincoln.ac.nz/wuautocomplete.php/?query=:searchtext");
     var weatherInfo = $resource("http://api.wunderground.com/api/02db7dc5a95f8654/conditions/forecast10day/q/zmw::zmwid.json");
