@@ -1,18 +1,19 @@
-var weatherApp = angular.module("weatherApp", ["ngResource", "ngRoute", "ngMessages", 'ngStorage']);
+var portfolioApp = angular.module("portfolioApp", ["ngResource", "ngRoute", "ngMessages", 'ngStorage']);
 
 // Define routes for the different page views
 
-weatherApp.config(['$routeProvider',
+portfolioApp.config(['$routeProvider',
   function ($routeProvider) {
       $routeProvider.
-        when('/about', {
-            templateUrl: 'views/about.html'
+        when('/CRUD', {
+            templateUrl: 'Views/CRUD.html',
+            controller: 'CRUDCtrl'
         }).
         when('/weather', {
-            templateUrl: 'views/weather.html',
+            templateUrl: 'Views/weather.html',
             controller: 'weatherCtrl'
         }).
         otherwise({
-            redirectTo: '/about'
+            redirectTo: '/weather'
         });
   }]);
