@@ -6,11 +6,11 @@ portfolioApp.config(['$routeProvider',
   function ($routeProvider) {
       $routeProvider.
         when('/CRUD', {
-            templateUrl: 'Views/CRUD.html',
+            templateUrl: 'views/CRUD.html',
             controller: 'CRUDCtrl'
         }).
         when('/weather', {
-            templateUrl: 'Views/weather.html',
+            templateUrl: 'views/weather.html',
             controller: 'weatherCtrl'
         }).
         otherwise({
