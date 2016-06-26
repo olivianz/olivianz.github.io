@@ -1,0 +1,91 @@
+<div class="row">
+    <main class="col-sm-8">
+        <h1>University Course List</h1>
+        <table class="table-bordered text-center">
+            <tr>
+                <th class="col-xs-2">Code</th>
+                <th class="col-xs-4">Title</th>
+                <th class="col-xs-1">Sem</th>
+                <th class="col-xs-2">Fee</th>
+                <th class="col-xs-2">Offered?</th>
+                <th class="col-xs-1">Edit</th>
+                <th class="col-xs-1">Delete</th>
+            </tr>
+            <tr ng-repeat="course in lists | orderBy: sequence : rev">
+                <td>{{course.code}}</td>
+                <td>{{course.title}}</td>
+                <td>{{course.semester}}</td>
+                <td>{{course.fee | currency}}</td>
+                <td>{{course.offered}}</td>
+                <td><button class="glyphicon glyphicon-edit btn btn-info" ng-click="edit(course)" ng-disabled="editing||adding"></button></td>
+                <td><button class="glyphicon glyphicon-trash btn btn-danger" ng-click="delete(course)" ng-disabled="editing||adding"></button></td>
+            </tr>
+        </table>
+        <button ng-click="sortByCode()" class="btn btn-primary">
+            Sort by Code
+            <span class="glyphicon glyphicon-check" ng-show="sequence==='code'"></span>
+        </button>
+        <button ng-click="sortBy('semester')" class="btn btn-primary">
+            Sort by Semester
+            <span ng-show="sequence==='semester'">
+                <span class="glyphicon glyphicon-arrow-up" ng-hide="!rev"></span>
+                <span class="glyphicon glyphicon-arrow-down" ng-hide="rev"></span>
+            </span>
+        </button>
+        <button ng-click="sortBy('fee')" class="btn btn-primary">
+            Sort by Fee
+            <span ng-show="sequence==='fee'">
+                <span class="glyphicon glyphicon-arrow-up" ng-hide="!rev"></span>
+                <span class="glyphicon glyphicon-arrow-down" ng-hide="rev"></span>
+            </span>
+        </button>
+        <button class="btn btn-primary pull-right" ng-click="addNew()" ng-disabled="editing||adding">Add New</button>
+    </main>
+
+    <aside class="col-sm-4">
+        <form name="inputForm" ng-show="editing||adding" novalidate>
+            <h2>Enter details for <label name="code" ng-model="list.code"><span class="bg-info">{{staticCode}}</span></label></h2>
+            <div class="form-group" ng-class="{'has-error': inputForm.title.$touched && inputForm.title.$invalid}">
+                <label>Title</label>
+                <input type="text" class="form-control" name="title" ng-model="list.title" required minlength="5" />
+                <div class="help-block" ng-messages="inputForm.title.$error" ng-show="inputForm.title.$touched">
+                    <p ng-message="required">The title field is required</p>
+                    <p ng-message="minlength">The title should be at least 5 characters</p>
+                </div>
+            </div>
+            <div class="form-group" ng-class="{'has-error': inputForm.fee.$touched && inputForm.semester.$invalid}">
+                <div class="radio-inline">
+                    <label><input type="radio" name="semester" value="S1" ng-model="list.semester" required />Sem1</label>
+                </div>
+                <div class="radio-inline">
+                    <label><input type="radio" name="semester" value="S2" ng-model="list.semester" required />Sem2</label>
+                </div>
+                <div class="radio-inline">
+                    <label><input type="radio" name="semester" value="SS" ng-model="list.semester" required />Summer</label>
+                </div>
+                <div class="help-block" ng-messages="inputForm.semester.$error" ng-show="inputForm.fee.$touched && inputForm.semester.$invalid">
+                    <p ng-message="required">Please select a semester</p>
+                </div>
+            </div>
+            <div class="form-group" ng-class="{'has-error': inputForm.fee.$touched && inputForm.fee.$invalid}">
+                <label>Course fee</label>
+                <input type="number" class="form-control" name="fee" value="fee" ng-model="list.fee" required min="100" max="500" />
+                <div class="help-block" ng-messages="inputForm.fee.$error" ng-show="inputForm.fee.$touched && inputForm.fee.$invalid">
+                    <p ng-message="required">The course fee field is required</p>
+                    <p ng-message="min">The course fee should be equal to or more than 100</p>
+                    <p ng-message="max">The course fee should be equal to or less than 500</p>
+                    <p ng-message="number">The course fee should be a number</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="offered" ng-model="list.offered" ng-true-value="'Yes'" ng-false-value="'No'" />Offered?
+                </label>
+            </div>
+            <div class="form-group">
+                <button type="submit" ng-click="save()" ng-disabled="inputForm.$invalid" class="btn btn-success">Save</button>
+                <button type="button" class="btn btn-danger" ng-click="cancel()">Cancel</button>
+            </div>
+        </form>
+    </aside>
+</div>
