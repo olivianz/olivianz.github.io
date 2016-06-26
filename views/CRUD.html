@@ -17,7 +17,7 @@
                 <td>{{course.semester}}</td>
                 <td>{{course.fee | currency}}</td>
                 <td>{{course.offered}}</td>
-                <td><a ng-click="edit(course)" ng-disabled="editing||adding">Edit</a></td>
+                <td><button class="glyphicon glyphicon-edit btn btn-info" ng-click="edit(course)" ng-disabled="editing||adding"></button></td>
                 <td><button class="glyphicon glyphicon-trash btn btn-danger" ng-click="delete(course)" ng-disabled="editing||adding"></button></td>
             </tr>
         </table>
