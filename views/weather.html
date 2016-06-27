@@ -1,7 +1,7 @@
 <form name="inputForm" novalidate>
     <div class="form-group row" ng-class="{'has-error': inputForm.place.$touched && inputForm.place.$invalid}">
         <input placeholder="Search a place" class="input-lg col-sm-offset-3 col-sm-6 col-xs-12" type="search"
-               ng-model="place" name="place" ng-change="getLocation()" required minlength="3" pattern="[A-Za-z\ ]+" />
+               ng-model="place" name="place" ng-change="getLocation()" required minlength="3" pattern="[A-Za-z\, ]+" />
         <div class="help-block" ng-messages="inputForm.place.$error" ng-show="inputForm.place.$touched">
             <p ng-message="required">The place field is required</p>
             <p ng-message="minlength">Please enter at least 3 letters</p>
@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <table ng-show="place.length>=3" ng-hide="locationSelected" class="col-sm-offset-3 col-sm-6">
+    <table ng-show="place.length>=3" ng-hide="locationSelected" class="table-condensed table-hover col-sm-offset-3 col-sm-6">
         <tr ng-repeat="location in locations.RESULTS | filter: place">
             <td><a ng-click="getWeather(location)">{{location.name}}</a></td>
         </tr>
