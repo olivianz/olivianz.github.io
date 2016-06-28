@@ -7,7 +7,7 @@
                 <th class="col-xs-4">Title</th>
                 <th class="col-xs-1">Sem</th>
                 <th class="col-xs-2">Fee</th>
-                <th class="col-xs-2">Offered?</th>
+                <th class="col-xs-1">Offered?</th>
                 <th class="col-xs-1">Edit</th>
                 <th class="col-xs-1">Delete</th>
             </tr>
@@ -21,25 +21,26 @@
                 <td><button class="glyphicon glyphicon-trash btn btn-danger" ng-click="delete(course)" ng-disabled="editing||adding"></button></td>
             </tr>
         </table>
-        <button ng-click="sortByCode()" class="btn btn-primary">
-            Sort by Code
-            <span class="glyphicon glyphicon-check" ng-show="sequence==='code'"></span>
-        </button>
-        <button ng-click="sortBy('semester')" class="btn btn-primary">
-            Sort by Semester
-            <span ng-show="sequence==='semester'">
-                <span class="glyphicon glyphicon-arrow-up" ng-hide="!rev"></span>
-                <span class="glyphicon glyphicon-arrow-down" ng-hide="rev"></span>
-            </span>
-        </button>
-        <button ng-click="sortBy('fee')" class="btn btn-primary">
-            Sort by Fee
-            <span ng-show="sequence==='fee'">
-                <span class="glyphicon glyphicon-arrow-up" ng-hide="!rev"></span>
-                <span class="glyphicon glyphicon-arrow-down" ng-hide="rev"></span>
-            </span>
-        </button>
-        <button class="btn btn-primary pull-right" ng-click="addNew()" ng-disabled="editing||adding">Add New</button>
+        <div>Sort By
+            <button ng-click="sortByCode()" class="btn btn-primary">
+                Code<span class="glyphicon glyphicon-check" ng-show="sequence==='code'"></span>
+            </button>
+            <button ng-click="sortBy('semester')" class="btn btn-primary">
+                Semester
+                <span ng-show="sequence==='semester'">
+                    <span class="glyphicon glyphicon-arrow-up" ng-hide="!rev"></span>
+                    <span class="glyphicon glyphicon-arrow-down" ng-hide="rev"></span>
+                </span>
+            </button>
+            <button ng-click="sortBy('fee')" class="btn btn-primary">
+                Fee
+                <span ng-show="sequence==='fee'">
+                    <span class="glyphicon glyphicon-arrow-up" ng-hide="!rev"></span>
+                    <span class="glyphicon glyphicon-arrow-down" ng-hide="rev"></span>
+                </span>
+            </button>
+            <button class="btn btn-success pull-right" ng-click="addNew()" ng-disabled="editing||adding">Add New</button>
+        </div>
     </main>
 
     <aside class="col-sm-4">
